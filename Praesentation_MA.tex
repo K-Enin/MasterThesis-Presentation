@@ -79,7 +79,7 @@ University of Mannheim
 \begin{frame}{Three-Step Approach}
 \begin{figure}
 \centering
-\includegraphics[width=0.7\textwidth]{images/AdvancedNetwork2}
+\includegraphics[width=0.7\textwidth]{images/AdvancedNetwork2.png}
 \caption{Gas Network}
 \end{figure}
 In this gas-network we have \textcolor{orange}{two compressors} and \textcolor{orange}{four compressor combinations}
@@ -89,7 +89,6 @@ In this gas-network we have \textcolor{orange}{two compressors} and \textcolor{o
 \item compressor 0 is \textbf{on}  and  compressor 1 is \textbf{off}: (1,0)
 \item compressor 0 is \textbf{on}  and  compressor 1 is \textbf{on} : (1,1)
 \end{itemize} 
-%Set of all compressor combinations: $\{(0,0), (0,1), (1,0), (1,1)\}$. \newline\newline
 If $n_{com}$ denotes the number of compressors, we have \textcolor{orange}{$n_{oc}= 2^{n_{com}}$} number of combinations. \newline
 We introduce \textcolor{orange}{convex multiplier controls} $w^t \in \{0,1\}^{n_{oc}}$ that tell which combination holds in $t$:  e.g. if combination $(0,1)$ in $t$ holds,  then $w_1^t=1$ and $w_k^t=0$ for $k \neq 1$. 
 \end{frame}
@@ -158,73 +157,6 @@ SUR can be solved in polynomial time and its objective value $\epsilon$ is propo
 \textcolor{orange}{With additional constraints that couple over time:} \newline Solve MILP: (\ref{Eq:2.1}) + additional constraints \newline
 $\epsilon$ cannot be driven to zero by decreasing $\Delta t$
 \end{frame}
-\begin{comment}
-\begin{frame}{Step 2: CIAP (Sum Up Rounding)}
-\Fontvi
-Consider given measurable functions\protect\footnotemark $\alpha_j: [0,t_m] \rightarrow [0,1]$ with $j=1,...,n_{oc}$ and time grid $0 < t_1 < ...<t_m$, which fulfills the SOS1 condition
-\begin{equation}
-\sum_{j=1}^{n_{oc}} \alpha_j(t)  = 1, \quad t \in [0,t_m]
-\label{Eq:SOSS1}
-\end{equation}
-and on which we approximate the control $\alpha(\cdot): [0,t_m] \rightarrow [0,1]^{n_{oc}}$.  We define $\Delta t_i := t_{t+1}-t_i$ and $\Delta t$ as the maximum distance
-\begin{equation}
-\Delta t := \max_{i=0,...,m-1} \Delta t_i.
-\label{Eq:2.47}
-\end{equation}
-Let a function $\beta (\cdot): [0,t_m] \rightarrow \{0,1\}^{n_{oc}}$ be defined as
-\begin{equation}
-\beta_j(t) = p_{j,i},  \quad t \in [t_i, t_{i+1})
-\label{Eq:2.49}
-\end{equation}
-where $p_{j,i}$ are binary values given by
-\begin{equation}
-\begin{aligned}
-\hat{p}_{j, i} &=\int_{0}^{t_{i+1}} \alpha_{j}(\tau) \mathrm{d} \tau-\sum_{k=0}^{i-1} p_{j, k} \Delta t_{k} \\
-p_{j, i} &= \begin{cases}1, & \text { if } \hat{p}_{j, i} \geq \hat{p}_{k, i}, \; \forall k \neq j \text { and } j<k \; \forall \; k: \hat{p}_{j, i}=\hat{p}_{k, i} \\
-0, & \text { else }\end{cases}
-\end{aligned}
-\label{Eq:2.50}
-\end{equation}
-\begin{block}{\footnotesize{Approximation by Sum Up Rounding}}
-Let a measurable function $\alpha:\left[0, t_m\right] \rightarrow [0,1]^{n_{oc}}$ fulfill \ref{Eq:SOSS1} and a function $\beta:\left[0, t_{m}\right] \rightarrow \{0,1\}^{n_{oc}}$ defined by \ref{Eq:2.49} and \ref{Eq:2.50} be given for $n_{oc} \geq 2$. Then it holds
-\begin{equation}
-\left\|\int_{0}^{t} \alpha(\tau)-\beta(\tau) d \tau\right\| \leq\left(n_{oc}-1\right) \Delta t
-\end{equation}
-where $\beta(\cdot)$ also fulfillls the SOS1 property (compare \ref{Eq:SOSS1}). 
-\end{block}
-\end{frame}
-\begin{frame}{Step 2: CIAP (Sum Up Rounding)}
-The Sum Up Rounding Startegy in a discretized version is denoted as follows
-\begin{alignat}{2}
-\begin{split}
-\widehat{p}_{j,i} &= \sum_{k=0}^i \tilde{p}_{j,k} -  \sum_{k=0}^{i-1} p_{j,k} \\
-p_{j,i} &= \begin{cases} 
-   1, & \text{if } \widehat{p}_{j,i} \geq \widehat{p}_{k,i}, \enspace \forall k \neq j \text{ and } j<k \enspace \forall k: \widehat{p}_{j,i} = \widehat{p}_{k,i} \\
-   0,       & \text{else } 
-  \end{cases}
- \end{split}
- \label{Eq:2.52}
-\end{alignat}
-$\tilde{p}_{j,k} \in [0,1]$ are \textcolor{orange}{relaxed solutions} \newline
-$p_{j,i} \in \{0,1\}$ are \textcolor{orange}{binary solutions}\newline\newline
-\textcolor{bluepurp}{Example:}
-\begin{figure}[ht]
-        \begin{minipage}[b]{0.4\linewidth}
-            \centering
-            \includegraphics[width=\textwidth]{images/Rounding1.png}
-            \caption{Relaxed control $\tilde{p}_{1,i}$}
-            \label{fig:a}
-        \end{minipage}
-        \hspace{0.1 cm}
-        \begin{minipage}[b]{0.4\linewidth}
-            \centering
-            \includegraphics[width=\textwidth]{images/Rounding2.png}
-            \caption{Binary values $p_{1,i}$}
-            \label{fig:b}
-        \end{minipage}
-    \end{figure}
-\end{frame}
-\end{comment}
 
 \section{GtP Characteristics}
 \begin{frame}{Power Network (1)}
@@ -325,7 +257,6 @@ For a fix but arbitrary node in the innodes $v \in V\setminus (V_q \cup V_c  \cu
 \label{Eq:5.16}
 \end{alignat}
 \ \newline\newline
-%for $v \in V\setminus (V_q \cup V_c  \cup V_p)$ and a pressure $p(v, t)$ at node $v$ in time $t$ \newline\newline
 \textcolor{bluepurp}{Gas-Power Coupling at Slack Node $s$}\newline\newline
 $s$ is the gas node connected to slack bus via edge $h_{slack}$,  $\epsilon^t$ is flow taken out of the gas network.  At slack node $s$ it holds:
 \begin{equation}
@@ -391,7 +322,6 @@ Optimization Problem \textcolor{orange}{without POC reformulation:}
 \textbf{Solution:} $p_j^t$,  $q_j^t$,  $\, j=0,...,n$,  $t=0,...,m$,  \textnormal{for each pipe}, $u_{v}^t$ and configuration $\beta_{v}^t$ $v \in V_c$ and $\, t=0,...,m$.  \newline
 \end{frame}
 \begin{frame}{Additional Constraints (1)}
-%\Fontvi
 \textcolor{bluepurp}{Additional Constraints: Type 1} - Compressor has to keep its state for at least a time $M_1$, $M_2$ for every compressor node $v \in V_c$.  
 \begin{equation}
 \sum_{e=k+1}^{k+\left\lfloor\frac{M_{1}}{\Delta t}\right\rfloor} \sum_{s=1}^{n_{oc}} c_{v}^{s} w_{s}^e\geq \sum_{s=1}^{n_{oc}} c_{v}^{s}\left\lfloor \frac{M_{1}}{\Delta t}\right\rfloor\left(-w_{s}^k+w_{s}^{k+1}\right) \quad \forall k \leq m - \left\lfloor\frac{M_{1}}{\Delta t}\right\rfloor
@@ -413,7 +343,6 @@ Optimization Problem \textcolor{orange}{without POC reformulation:}
 \begin{alignat}{1}
 \begin{split}
 \min_{\substack{\beta^t \in H \cap \{0,1\}^{n_{oc}},  \\ t =0,...,m-1,  \\ \delta^0 \in \mathbb{R}^{n_{oc}}, \epsilon \in \mathbb{R}}}  &\epsilon      \\
-%\min_{\beta^t \in H \cap \{0,1\}^{n_{oc}},  \newline t =0,...,n_T-1,  \delta^0 \in \mathbb{R}^{n_{oc}}, \epsilon \in \mathbb{R}}  &\epsilon      \\
 \text{subject to: } \quad &\norm{\delta^0 + \sum_{t=0}^{k-1} \Delta t (\alpha^t-w^t)}_{\Omega} \leq \epsilon \quad  \text{for all } k=0,...,m \\
 & + \textcolor{orange}{additional \; constraints \; type \; 1 \, }  \text{ OR } + \textcolor{orange}{additional \; constraints \; type \; 2}
 \end{split}
@@ -505,8 +434,6 @@ $\epsilon^t $ (mass taken out of gas network is shown in \textcolor{bluepurp}{Fi
 \begin{tabular}{c} \hline
 Three-Step Approach \\\hline
 \includegraphics[width=0.9\textwidth]{images/AdvancedModel3Step} \\
- %\includegraphics[width=0.9\textwidth]{images/POCConf2.png}  \\ 
- %\includegraphics[width=0.9\textwidth]{images/POC_Controlu1Caption}  \\ 
 \textcolor{orange}{OFV:} $2.00000$  \\ 
 \textcolor{orange}{Runtime:} 1259.03 $sec$ ($\approx$ 21 $min$)
 \end{tabular}
@@ -528,8 +455,6 @@ Three-Step Approach \\\hline
 No Add.Constraints & Add. Constraint Type 1& Add. Constraint Type 2 \\\hline
 & Compressor can only switch $10$ times in $5 \, sec $& Compressor has to keep its state for at least $3$ time steps \\
 \includegraphics[width=.32\textwidth]{images/AdvancedModel3Step} & \includegraphics[width=.32\textwidth]{images/AdvancedModel3Step2}& \includegraphics[width=.32\textwidth]{images/AdvancedModel3Step3}   \\
-%\includegraphics[width=.32\textwidth]{images/POCConf2.png}  &   \includegraphics[width=.32\textwidth]{images/AC_Simple/POCConf2.png} & \includegraphics[width=.32\textwidth]{images/AC_Simple/POCConf3.png}  \\ 
-%\includegraphics[width=.32\textwidth]{images/POC_Controlu1Caption}&   \includegraphics[width=.32\textwidth]{images/AC_Simple/POCControl_u2.png}  & \includegraphics[width=.32\textwidth]{images/AC_Simple/POCControl_u3.png}    \\ 
 \textcolor{orange}{OFV:} $2.0000$ & \textcolor{orange}{OFV:}  $2.0000$ & \textcolor{orange}{OFV:}  $2.0000$ \\ 
 \textcolor{orange}{Runtime:} 1259 $sec$ ($\approx$ 21 $min$) & \textcolor{orange}{Runtime:}  1941.63 $sec$ ($\approx$ 32.3 $min$) & \textcolor{orange}{Runtime:}  1920.15 $sec$ ($\approx$ 32 $min$)\\
 \end{tabular}
@@ -542,7 +467,6 @@ No Add.Constraints & Add. Constraint Type 1& Add. Constraint Type 2 \\\hline
 \item With additional constraints we can prevent the compressor from \textcolor{orange}{switching too often} and can achieve even better OFV
 \item Due to the CFL Condition we had to choose a very small time step ($\Delta t = \frac{1}{60}$) and therefore considered a simulation of $5 \,  sec$.  For realistic simulations (e.g. 1 day) computation will likely take several hours.  \newline
 Interesting question: How does run time and solutions vary for \textcolor{orange}{implicit scheme} and \textcolor{orange}{explicit scheme} (with Three Step approach)?
-%However approximation results for the Three-Step approach are only formulated for \textcolor{orange}{explicit schemes}.  Simulating the Weymouth Equation with an explicit scheme is quite \textcolor{orange}{expensive}, since due to CFL condition we have to choose a very small $\Delta t$ (here: we considered only $5 \, sec$).  An \textcolor{orange}{implicit scheme} might be a better choice.
 \end{itemize}
 \end{frame}
 
